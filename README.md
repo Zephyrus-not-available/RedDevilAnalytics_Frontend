@@ -3,7 +3,6 @@
 A high-performance, visually stunning web dashboard providing data-driven insights and AI predictions for Manchester United fixtures.
 
 ![Dashboard Preview](public/projectpreview.png) 
-*Note: Replace 'image_da8a5e.png' with the actual path if you upload the image to your repository.*
 
 ## 🚀 Overview
 
