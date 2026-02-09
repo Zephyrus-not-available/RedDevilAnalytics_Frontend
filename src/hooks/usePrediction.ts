@@ -1,26 +1,28 @@
 import { useQuery } from '@tanstack/react-query'
 import { getNextPrediction } from '../services/api'
 import { mockPrediction } from '../data/mockPrediction'
-import type { MatchPrediction } from '../types/prediction'
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const useMock = import.meta.env.VITE_USE_MOCK_DATA === 'true'
-
-const fetchPrediction = async (): Promise<MatchPrediction> => {
-  if (useMock) {
-    await delay(600)
-    return mockPrediction
-  }
-
-  return getNextPrediction()
-}
+const useMock = import.meta.env.VITE_USE_MOCK_DATA !== 'false'
 
 export const usePrediction = () =>
   useQuery({
     queryKey: ['match-prediction', useMock],
-    queryFn: fetchPrediction,
-    staleTime: 60_000,
-    retry: 1
+    queryFn: async () => {
+      if (useMock) {
+        await delay(800)
+        return { status: 'ready', data: mockPrediction } as const
+      }
+      return getNextPrediction()
+    },
+    refetchInterval: (query) => {
+      // Poll every 3 seconds if status is processing
+      if (query.state.data?.status === 'processing') {
+        return 3000
+      }
+      return false
+    },
+    staleTime: 0, // Always check for fresh data
+    retry: false // Don't retry on 202 (it's a success in our book), only on actual errors
   })
-

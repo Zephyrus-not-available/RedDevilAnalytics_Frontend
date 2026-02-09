@@ -113,26 +113,37 @@ export const mockPrediction: MatchPrediction = {
       heatZone: 'Right wing isolations'
     },
     {
-      id: 'casemiro',
-      name: 'Casemiro',
-      position: 'Defensive Midfielder',
-      expectedXG: 0.12,
-      expectedXA: 0.09,
-      shots: 1,
-      keyPasses: 2,
-      minutes: 90,
-      heatZone: 'Deep build-up lanes'
+      id: 'matheus-cunha',
+      name: 'Matheus Cunha',
+      position: 'Secondary Striker',
+      expectedXG: 0.35,
+      expectedXA: 0.28,
+      shots: 3,
+      keyPasses: 3,
+      minutes: 75,
+      heatZone: 'Between the lines'
     },
     {
-      id: 'luke-shaw',
-      name: 'Luke Shaw',
-      position: 'Left Back',
-      expectedXG: 0.06,
-      expectedXA: 0.19,
-      shots: 1,
+      id: 'bryan-mbeumo',
+      name: 'Bryan Mbeumo',
+      position: 'Right Winger',
+      expectedXG: 0.29,
+      expectedXA: 0.31,
+      shots: 2,
       keyPasses: 3,
+      minutes: 70,
+      heatZone: 'Cutting inside right'
+    },
+    {
+      id: 'kobbie-mainoo',
+      name: 'Kobbie Mainoo',
+      position: 'Central Midfielder',
+      expectedXG: 0.15,
+      expectedXA: 0.12,
+      shots: 1,
+      keyPasses: 4,
       minutes: 90,
-      heatZone: 'Overlapping left corridor'
+      heatZone: 'Midfield transitions'
     },
     {
       id: 'andre-onana',

@@ -14,7 +14,12 @@ export default function Landing() {
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 10, ease: 'easeOut' }}
-          className="h-full w-full bg-[url('https://images.unsplash.com/photo-1624880357913-a8539238245b?q=80&w=2560&auto=format&fit=crop')] bg-cover bg-center"
+          className="h-full w-full"
+          style={{
+            backgroundImage: "url('/landing-pinterest.jpg'), url('https://images.unsplash.com/photo-1624880357913-a8539238245b?q=80&w=2560&auto=format&fit=crop')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-united-black via-united-black/80 to-united-red/10 mix-blend-multiply" />
         <div className="absolute inset-0 bg-black/40" />

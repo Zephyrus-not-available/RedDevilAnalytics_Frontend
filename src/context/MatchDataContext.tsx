@@ -11,6 +11,7 @@ type MatchDataContextValue = {
   setSelectedFormIndex: (index: number) => void
   data?: MatchPrediction
   isLoading: boolean
+  isProcessing: boolean
   isError: boolean
   error: unknown
   refetch: () => void
@@ -21,7 +22,10 @@ const MatchDataContext = createContext<MatchDataContextValue | undefined>(undefi
 export function MatchDataProvider({ children }: { children: ReactNode }) {
   const [live, setLive] = useState(false)
   const [selectedFormIndex, setSelectedFormIndex] = useState(0)
-  const { data, isLoading, isError, error, refetch } = usePrediction()
+  const { data: apiResponse, isLoading, isError, error, refetch } = usePrediction()
+
+  const data = apiResponse?.status === 'ready' ? apiResponse.data : undefined
+  const isProcessing = apiResponse?.status === 'processing'
 
   const value = useMemo(
     () => ({
@@ -31,11 +35,12 @@ export function MatchDataProvider({ children }: { children: ReactNode }) {
       setSelectedFormIndex,
       data,
       isLoading,
+      isProcessing,
       isError,
       error,
       refetch
     }),
-    [live, selectedFormIndex, data, isLoading, isError, error, refetch]
+    [live, selectedFormIndex, data, isLoading, isProcessing, isError, error, refetch]
   )
 
   return <MatchDataContext.Provider value={value}>{children}</MatchDataContext.Provider>

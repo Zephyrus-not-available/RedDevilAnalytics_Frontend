@@ -1,5 +1,6 @@
 import { useMatchData } from '../../context/MatchDataContext'
 import { formResultLabel, formResultTone } from '../../lib/ui'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export function FormGuide() {
   const { data, selectedFormIndex, setSelectedFormIndex } = useMatchData()
@@ -25,33 +26,49 @@ export function FormGuide() {
         {data.recentMatches.map((match, index) => {
           const isActive = index === selectedFormIndex
           return (
-            <button
+            <motion.button
               key={match.id}
+              layout
               type="button"
               onClick={() => setSelectedFormIndex(index)}
-              className={`h-10 w-10 rounded-full grid place-items-center text-sm font-semibold border transition ${
+              className={`h-10 w-10 rounded-full grid place-items-center text-sm font-semibold border transition-colors ${
                 formResultTone[match.result]
-              } ${isActive ? 'ring-2 ring-united-red/60' : 'opacity-80 hover:opacity-100'}`}
+              } ${isActive ? 'ring-2 ring-united-red/60 scale-110' : 'opacity-80 hover:opacity-100'}`}
               aria-pressed={isActive}
               aria-label={`${formResultLabel[match.result]} vs ${match.opponent}`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
               {match.result}
-            </button>
+            </motion.button>
           )
         })}
       </div>
-      {selectedMatch && (
-        <div className="mt-5 grid gap-2 text-sm text-white/70">
-          <div className="flex items-center justify-between">
-            <span className="text-white">{selectedMatch.opponent}</span>
-            <span className="font-semibold text-white">{selectedMatch.score}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>{selectedMatch.date}</span>
-            <span>{formResultLabel[selectedMatch.result]}</span>
-          </div>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {selectedMatch && (
+          <motion.div
+            key={selectedMatch.id}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-5 overflow-hidden"
+          >
+            <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-white font-medium">{selectedMatch.opponent}</span>
+                <span className="font-bold text-white text-lg font-headline">{selectedMatch.score}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs text-white/60">
+                <span>{selectedMatch.date}</span>
+                <span className={`px-2 py-0.5 rounded-full ${formResultTone[selectedMatch.result].split(' ')[0]}`}>
+                  {formResultLabel[selectedMatch.result]}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

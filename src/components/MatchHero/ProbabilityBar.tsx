@@ -1,4 +1,5 @@
 import { Gauge } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import type { AiConfidence, Probability } from '../../types/prediction'
 import { confidenceTone } from '../../lib/ui'
@@ -52,10 +53,12 @@ export function ProbabilityBar({ probabilities, confidence }: ProbabilityBarProp
             {segments.map((segment) => {
               const width = `${Math.max(4, Math.round((segment.value / total) * 100))}%`
               return (
-                <div
+                <motion.div
                   key={segment.label}
-                  className={`h-full transition-all duration-500 bg-gradient-to-r ${segment.color}`}
-                  style={{ width }}
+                  className={`h-full bg-gradient-to-r ${segment.color}`}
+                  initial={{ width: 0 }}
+                  animate={{ width }}
+                  transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
                 />
               )
             })}
@@ -64,7 +67,9 @@ export function ProbabilityBar({ probabilities, confidence }: ProbabilityBarProp
             {segments.map((segment) => (
               <div key={segment.label} className="flex items-center justify-between">
                 <span>{segment.label}</span>
-                <span className="font-semibold text-white">{segment.value}%</span>
+                <span className="font-semibold text-white">
+                  <CountUp value={segment.value} />%
+                </span>
               </div>
             ))}
           </div>
@@ -85,3 +90,14 @@ export function ProbabilityBar({ probabilities, confidence }: ProbabilityBarProp
   )
 }
 
+function CountUp({ value }: { value: number }) {
+  return (
+    <motion.span
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {value}
+    </motion.span>
+  )
+}

@@ -26,4 +26,24 @@ body {
         -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
         text-stroke: 1px rgba(255, 255, 255, 0.08);
     }
+    .sr-only-focusable {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    .sr-only-focusable:focus,
+    .sr-only-focusable:active {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 8px;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border-radius: 6px;
+      z-index: 9999;
+    }
 }

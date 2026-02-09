@@ -1,40 +1,18 @@
-import { motion } from 'framer-motion'
-import type { Variants } from 'framer-motion'
 import { MatchHero } from '../components/MatchHero/MatchHero'
 import { ProbabilityBar } from '../components/MatchHero/ProbabilityBar'
 import { FormGuide } from '../components/MatchHero/FormGuide'
 import { LeagueTable } from '../components/StatsTable/LeagueTable'
 import { PlayerStatGrid } from '../components/StatsTable/PlayerStatGrid'
-import { SkeletonBlock } from '../components/ui/Skeleton'
 import { useMatchData } from '../context/MatchDataContext'
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
-}
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 100,
-      damping: 15
-    }
-  }
-}
+import { Loader2 } from 'lucide-react'
+import { ScanningLoader } from '../components/Loader/ScanningLoader'
+import { SectionWrapper } from '../components/ui/SectionWrapper'
 
 function DashboardSkeleton() {
   return (
     <div className="space-y-6">
+      <ScanningLoader />
+      {/*
       <SkeletonBlock className="h-72 rounded-3xl" />
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         <SkeletonBlock className="h-44 rounded-2xl" />
@@ -42,13 +20,31 @@ function DashboardSkeleton() {
       </div>
       <SkeletonBlock className="h-52 rounded-2xl" />
       <SkeletonBlock className="h-72 rounded-2xl" />
+      */}
+    </div>
+  )
+}
+
+function ProcessingState() {
+  return (
+    <div className="glass-panel rounded-2xl p-10 border border-white/10 w-full max-w-full flex flex-col items-center justify-center min-h-[400px] text-center space-y-4">
+      <div className="relative">
+        <div className="absolute inset-0 bg-united-red/20 blur-xl rounded-full animate-pulse" />
+        <Loader2 className="w-12 h-12 text-united-red animate-spin relative z-10" />
+      </div>
+      <h3 className="text-2xl font-headline uppercase tracking-wide">
+        AI Analysis in Progress
+      </h3>
+      <p className="text-white/60 max-w-md">
+        Our neural network is currently simulating match outcomes based on real-time data. This usually takes a few seconds.
+      </p>
     </div>
   )
 }
 
 function DashboardError({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="glass-panel rounded-2xl p-6 border border-white/10">
+    <div className="glass-panel rounded-2xl p-6 border border-white/10 w-full max-w-full">
       <p className="text-lg font-semibold">Prediction feed unavailable</p>
       <p className="text-sm text-white/70 mt-2">
         The analytics engine is still computing the match model. Try again in a moment.
@@ -64,10 +60,14 @@ function DashboardError({ onRetry }: { onRetry: () => void }) {
 }
 
 export default function Dashboard() {
-  const { data, isLoading, isError, refetch } = useMatchData()
+  const { data, isLoading, isProcessing, isError, refetch } = useMatchData()
 
   if (isLoading) {
     return <DashboardSkeleton />
+  }
+
+  if (isProcessing) {
+    return <ProcessingState />
   }
 
   if (isError || !data) {
@@ -75,29 +75,27 @@ export default function Dashboard() {
   }
 
   return (
-    <motion.div
-      className="space-y-6"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.div variants={itemVariants}>
+    <div className="space-y-8">
+      <SectionWrapper>
         <MatchHero data={data} />
-      </motion.div>
+      </SectionWrapper>
+
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <motion.div variants={itemVariants}>
+        <SectionWrapper delay={0.1} className="h-full">
           <ProbabilityBar probabilities={data.probabilities} confidence={data.aiConfidence} />
-        </motion.div>
-        <motion.div variants={itemVariants}>
+        </SectionWrapper>
+        <SectionWrapper delay={0.2} className="h-full">
           <FormGuide />
-        </motion.div>
+        </SectionWrapper>
       </div>
-      <motion.div variants={itemVariants}>
+
+      <SectionWrapper delay={0.3}>
         <LeagueTable />
-      </motion.div>
-      <motion.div variants={itemVariants}>
+      </SectionWrapper>
+
+      <SectionWrapper delay={0.4}>
         <PlayerStatGrid />
-      </motion.div>
-    </motion.div>
+      </SectionWrapper>
+    </div>
   )
 }
