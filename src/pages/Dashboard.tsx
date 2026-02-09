@@ -1,3 +1,5 @@
+import { SectionWrapper } from '../components/ui/SectionWrapper'
+import { TopNavBar } from '../components/ui/TopNavBar'
 import { MatchHero } from '../components/MatchHero/MatchHero'
 import { ProbabilityBar } from '../components/MatchHero/ProbabilityBar'
 import { FormGuide } from '../components/MatchHero/FormGuide'
@@ -6,7 +8,6 @@ import { PlayerStatGrid } from '../components/StatsTable/PlayerStatGrid'
 import { useMatchData } from '../context/MatchDataContext'
 import { Loader2 } from 'lucide-react'
 import { ScanningLoader } from '../components/Loader/ScanningLoader'
-import { SectionWrapper } from '../components/ui/SectionWrapper'
 
 function DashboardSkeleton() {
   return (
@@ -63,39 +64,89 @@ export default function Dashboard() {
   const { data, isLoading, isProcessing, isError, refetch } = useMatchData()
 
   if (isLoading) {
-    return <DashboardSkeleton />
+    return (
+      <div className="min-h-screen bg-united-black">
+        <TopNavBar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <DashboardSkeleton />
+        </div>
+      </div>
+    )
   }
 
   if (isProcessing) {
-    return <ProcessingState />
+    return (
+      <div className="min-h-screen bg-united-black">
+        <TopNavBar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <ProcessingState />
+        </div>
+      </div>
+    )
   }
 
   if (isError || !data) {
-    return <DashboardError onRetry={refetch} />
+    return (
+      <div className="min-h-screen bg-united-black">
+        <TopNavBar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <DashboardError onRetry={refetch} />
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-8">
-      <SectionWrapper>
-        <MatchHero data={data} />
-      </SectionWrapper>
+    <div className="min-h-screen bg-united-black text-white selection:bg-united-red selection:text-white">
+      <TopNavBar />
 
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <SectionWrapper delay={0.1} className="h-full">
-          <ProbabilityBar probabilities={data.probabilities} confidence={data.aiConfidence} />
-        </SectionWrapper>
-        <SectionWrapper delay={0.2} className="h-full">
-          <FormGuide />
-        </SectionWrapper>
-      </div>
+      <main id="main" className="relative overflow-hidden w-full">
+        <div className="absolute inset-0 pointer-events-none opacity-40">
+          <div className="grid-overlay" />
+        </div>
 
-      <SectionWrapper delay={0.3}>
-        <LeagueTable />
-      </SectionWrapper>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16 relative pb-24">
 
-      <SectionWrapper delay={0.4}>
-        <PlayerStatGrid />
-      </SectionWrapper>
+          {/* Match Center Section */}
+          <div id="match-center" className="scroll-mt-40 space-y-8">
+            <SectionWrapper>
+              <MatchHero data={data} />
+            </SectionWrapper>
+
+            <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+              <SectionWrapper delay={0.1} className="h-full">
+                <ProbabilityBar probabilities={data.probabilities} confidence={data.aiConfidence} />
+              </SectionWrapper>
+              <SectionWrapper delay={0.2} className="h-full">
+                <FormGuide />
+              </SectionWrapper>
+            </div>
+          </div>
+
+          {/* Squad Insights Section */}
+          <div id="squad-insights" className="scroll-mt-40 space-y-6">
+            <div className="flex items-center gap-3 mb-2 border-b border-white/10 pb-4">
+              <h2 className="text-xl font-headline tracking-wide uppercase">Squad Insights</h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-united-red/50 to-transparent" />
+            </div>
+            <SectionWrapper delay={0.3}>
+              <PlayerStatGrid />
+            </SectionWrapper>
+          </div>
+
+          {/* League Outlook Section */}
+          <div id="league-outlook" className="scroll-mt-40 space-y-6">
+            <div className="flex items-center gap-3 mb-2 border-b border-white/10 pb-4">
+              <h2 className="text-xl font-headline tracking-wide uppercase">League Outlook</h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-united-red/50 to-transparent" />
+            </div>
+            <SectionWrapper delay={0.4}>
+              <LeagueTable />
+            </SectionWrapper>
+          </div>
+
+        </div>
+      </main>
     </div>
   )
 }
