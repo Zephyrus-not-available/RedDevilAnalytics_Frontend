@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import type { Variants } from 'framer-motion'
 import { MatchHero } from '../components/MatchHero/MatchHero'
 import { ProbabilityBar } from '../components/MatchHero/ProbabilityBar'
 import { FormGuide } from '../components/MatchHero/FormGuide'
@@ -7,7 +8,7 @@ import { PlayerStatGrid } from '../components/StatsTable/PlayerStatGrid'
 import { SkeletonBlock } from '../components/ui/Skeleton'
 import { useMatchData } from '../context/MatchDataContext'
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -18,7 +19,7 @@ const containerVariants = {
   }
 }
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
